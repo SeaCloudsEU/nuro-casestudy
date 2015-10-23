@@ -1,0 +1,54 @@
+name: Nuro case study on byon
+location:
+  byon:
+    user: vagrant
+    privateKeyFile: ./seaclouds_id_rsa
+    hosts:
+    - 192.168.100.12
+
+services:
+- serviceType: brooklyn.entity.basic.SameServerEntity
+  name: NURO app
+  brooklyn.children:
+  - serviceType: brooklyn.entity.basic.VanillaSoftwareProcess
+    name: Httpd + PHP
+    id: nuroPHP
+    provisioning.properties:
+      stopIptables: true
+
+    launch.command: |
+      sudo apt-get update
+      sudo apt-get -y install apache2 apache2-utils php5 php5-mysql libaio1 unzip 
+      wget -O nurogames-seaclouds-casestudy-php.tgz "http://${USER}:${PASSWORD}@seaclouds-dev.nurogames.com/nuro-casestudy/versions/${VERSION}"
+      sudo mkdir /var/www/html
+      sudo tar --directory=/var/www/html -xzf nurogames-seaclouds-casestudy-php.tgz
+      sudo chmod -R 777 /var/www/html/nuro-casestudy
+      cp '/var/www/html/nuro-casestudy/config/config_template.php' '/var/www/html/nuro-casestudy/config/config.php'
+      sed -i "s/%host%/$HOST/" /var/www/html/nuro-casestudy/config/config.php
+      sed -i "s/%database%/$DB_NAME/" /var/www/html/nuro-casestudy/config/config.php
+      sed -i "s/%user%/$DB_USER/" /var/www/html/nuro-casestudy/config/config.php
+      sed -i "s/%password%/$DB_PASSWORD/" /var/www/html/nuro-casestudy/config/config.php
+      sudo service apache2 restart
+
+    checkRunning.command: |
+      sudo service apache2 status
+
+    stop.command: |
+      sudo service apache2 stop
+
+    env:
+      USER: seaclouds
+      PASSWORD: preview
+      VERSION: D6.3.2/nurogames-seaclouds-casestudy-php-D6.3.2v0.1_20150921_1543CET.tgz
+      HOST: $brooklyn:component("db").attributeWhenReady("host.name")
+      DB_NAME: "database1"
+      DB_USER: "brooklyn"
+      DB_PASSWORD: "br00k11n"
+
+    install.latch: $brooklyn:component("db").attributeWhenReady("service.isUp")
+
+  - serviceType: org.apache.brooklyn.entity.database.mysql.MySqlNode
+    id: db
+    name: Nuro DB
+    brooklyn.config:
+      datastore.creation.script.url: ./create.sql

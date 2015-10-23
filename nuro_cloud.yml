@@ -1,0 +1,47 @@
+name: Nuro case study on the Cloud byon
+location:
+  jclouds:aws-ec2:
+    identity:     <REPLACE>
+    credential:   <REPLACE>
+    region:       eu-west-1
+services:
+
+- serviceType: brooklyn.entity.basic.VanillaSoftwareProcess
+  name: Httpd + PHP
+  id: nuroPHP
+  provisioning.properties:
+    stopIptables: true
+
+  launch.command: |
+    sudo apt-get update
+    sudo apt-get -y install apache2 apache2-utils php5 php5-mysql libaio1 unzip 
+    wget -O nurogames-seaclouds-casestudy-php.tgz "http://${USER}:${PASSWORD}@seaclouds-dev.nurogames.com/nuro-casestudy/versions/${VERSION}"
+    sudo tar --directory=/var/www/html -xzf nurogames-seaclouds-casestudy-php.tgz
+    sudo chmod -R 777 /var/www/html/nuro-casestudy
+    cp '/var/www/html/nuro-casestudy/config/config_template.php' '/var/www/html/nuro-casestudy/config/config.php'
+    sed -i "s/%host%/$HOST/" /var/www/html/nuro-casestudy/config/config.php
+    sed -i "s/%database%/$DB_NAME/" /var/www/html/nuro-casestudy/config/config.php
+    sed -i "s/%user%/$DB_USER/" /var/www/html/nuro-casestudy/config/config.php
+    sed -i "s/%password%/$DB_PASSWORD/" /var/www/html/nuro-casestudy/config/config.php
+    sudo service apache2 restart
+
+  checkRunning.command: |
+    sudo service apache2 status
+
+  stop.command: |
+    sudo service apache2 stop
+
+  env:
+    USER: seaclouds
+    PASSWORD: preview
+    VERSION: D6.3.2/nurogames-seaclouds-casestudy-php-D6.3.2v0.1_20150921_1543CET.tgz
+    HOST: $brooklyn:component("db").attributeWhenReady("host.name")
+    DB_NAME: "database1"
+    DB_USER: "brooklyn"
+    DB_PASSWORD: "br00k11n"
+
+- serviceType: org.apache.brooklyn.entity.database.mysql.MySqlNode
+  id: db
+  name: Nuro DB
+  brooklyn.config:
+    datastore.creation.script.url: ./create.sql
