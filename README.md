@@ -1,4 +1,6 @@
-# NURO case study of http://www.seaclouds-project.eu/
+# NURO case study
+
+of http://www.seaclouds-project.eu/
 
 This is a clone of the SeaClouds - NURO CaseStudy SVN repository
 
@@ -12,22 +14,22 @@ Additional resources can be found here: http://seaclouds-dev.nurogames.com/nuro-
 Each package has a ZIP and a folder. The ZIP is the plain module for deployment.
 Within the folders you can find additional files suitable for cloud foundry and other.
 
-1. nuro-api.zip - nuro-api
+### nuro-api.zip - nuro-api
 
 This is the NURO API, usable as game server plugin and stand alone.
 
 
-1. nuro-gui.zip - nuro-gui
+### nuro-gui.zip - nuro-gui
 
 This is the NURO GUI, usble for benchmarking and simulation of an API deployment.
 
 
-1. nuro-casestudy_current.zip - nuro-all
+### nuro-casestudy_current.zip - nuro-all
 
 This is NURO API + NURO GUI for single node deployment.
 
 
-1. cf-ex-phpmyadmin4sc.zip - cf-ex-phpmyadmin4sc
+### cf-ex-phpmyadmin4sc.zip - cf-ex-phpmyadmin4sc
 
 This is for cloud foundry PaaS deployment onely and is based on https://github.com/dmikusa-pivotal/cf-ex-phpmyadmin
 
