@@ -1,6 +1,6 @@
 # NURO case study
 
-of http://www.seaclouds-project.eu/
+NURO case study is for evaluation of http://www.seaclouds-project.eu/
 
 This is a clone of the SeaClouds - NURO CaseStudy SVN repository
 
@@ -9,10 +9,12 @@ See Deliverable D6.3.1, D6.3.2 and D6.3.3 for details.
 
 Additional resources can be found here: http://seaclouds-dev.nurogames.com/nuro-casestudy/
 
+
 ## Packages
 
 Each package has a ZIP and a folder. The ZIP is the plain module for deployment.
 Within the folders you can find additional files suitable for cloud foundry and other.
+
 
 ### nuro-api.zip - nuro-api
 
