@@ -1,0 +1,14 @@
+---
+applications:
+- name: ng_pma_dir
+  memory: 128M 
+  instances: 1
+  host: sc-pma-all
+  domain: cfapps.io
+  path: .
+  buildpack: https://github.com/cloudfoundry/php-buildpack.git
+  env:
+    db_connection_uri: mysql://user:password@seaclouds-byon1.nurogames.com:3306/seaclouds_demo
+  services:
+  - nuro-db1
+  - nuro-spark

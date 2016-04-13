@@ -1,0 +1,15 @@
+---
+applications:
+- name: nurocasestudy-php-api
+  memory: 256M 
+  instances: 1
+  host: nurocasestudy-php-api
+  domain: cfapps.io
+  path: .
+  buildpack: https://github.com/cloudfoundry/php-buildpack.git
+  env:
+    db_connection_uri: mysql://user:password@host:3306/databasename"
+    db_user: someuser
+    db_name: somedatabase
+    db_pass: sommesecret
+    db_host: sommehost
